@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mastering Network Architecture with VyOS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chosen Palette: Slate Gray and Sky Blue -->
+    <!-- Application Structure Plan: The application is structured as a single-page curriculum with a persistent left-hand sidebar for navigating between five core modules. This allows for both sequential learning and quick access to specific topics. Within each module, content is organized into interactive tabs (Objectives, Concept, Lab, Verify, Troubleshoot, Automation), breaking down dense information into manageable, thematically-grouped sections. This design was chosen to mirror a structured learning path, preventing cognitive overload and allowing learners to focus on one aspect (e.g., theory vs. practice) at a time. Simple, clear network diagrams are built with HTML/CSS to provide essential visual context for the hands-on labs. -->
+    <!-- Visualization & Content Choices: 
+        - Report Info: Overall curriculum structure -> Goal: Organize & Inform -> Viz/Presentation Method: Sidebar navigation controlling content visibility -> Interaction: Click to switch modules -> Justification: Creates an intuitive, app-like experience for a long-form educational document.
+        - Report Info: Module subsections (theory, lab, etc.) -> Goal: Organize & Inform -> Viz/Presentation Method: Tabbed content panels -> Interaction: Click to switch between subsections -> Justification: Scopes the user's focus within a single module, aligning with the pedagogical flow from theory to practice.
+        - Report Info: Network topologies for labs -> Goal: Illustrate -> Viz/Presentation Method: Diagrams built with styled HTML/CSS divs -> Interaction: Static visual aid -> Justification: Provides crucial visual context for complex lab setups without requiring external graphics or complex libraries.
+        - Report Info: CLI commands and code -> Goal: Facilitate -> Viz/Presentation Method: Pre-formatted code blocks with a copy button -> Interaction: Click to copy code -> Justification: Enhances usability for the hands-on labs by reducing typing errors. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        .module-content, .tab-panel {
+            display: none;
+        }
+        .module-content.active, .tab-panel.active {
+            display: block;
+        }
+        .sidebar-link.active {
+            background-color: #0284c7; /* sky-600 */
+            color: white;
+        }
+        .tab-link.active {
+            border-color: #0284c7; /* sky-600 */
+            color: #0284c7;
+            font-weight: 600;
+        }
+        .code-block {
+            position: relative;
+        }
+        .copy-button {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+            border-radius: 0.25rem;
+            cursor: pointer;
+            background-color: #475569;
+            color: white;
+            opacity: 0.5;
+            transition: opacity 0.2s;
+        }
+        .code-block:hover .copy-button {
+            opacity: 1;
+        }
+        .diagram-box {
+            border: 1px solid #94a3b8;
+            padding: 1rem;
+            text-align: center;
+            border-radius: 0.375rem;
+            background-color: #f8fafc;
+        }
+        .diagram-arrow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 1rem;
+            color: #64748b;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <div class="flex min-h-screen">
+        <aside class="w-64 bg-slate-800 text-white p-4 flex-shrink-0 fixed h-full">
+            <h1 class="text-xl font-bold mb-6 text-slate-100">VyOS Mastery</h1>
+            <nav>
+                <ul class="space-y-2" id="sidebar-nav">
+                    <li><a href="#" class="sidebar-link block p-2 rounded-md hover:bg-slate-700 transition-colors" data-module="module-1">1. The VyOS Philosophy</a></li>
+                    <li><a href="#" class="sidebar-link block p-2 rounded-md hover:bg-slate-700 transition-colors" data-module="module-2">2. Gateway to the World</a></li>
+                    <li><a href="#" class="sidebar-link block p-2 rounded-md hover:bg-slate-700 transition-colors" data-module="module-3">3. Multi-ISP Resilience</a></li>
+                    <li><a href="#" class="sidebar-link block p-2 rounded-md hover:bg-slate-700 transition-colors" data-module="module-4">4. Connecting the Silos</a></li>
+                    <li><a href="#" class="sidebar-link block p-2 rounded-md hover:bg-slate-700 transition-colors" data-module="module-5">5. The Final Mile</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="ml-64 flex-1 p-6 md:p-10">
+            <div class="max-w-4xl mx-auto">
+                
+                <!-- Module 1 -->
+                <section id="module-1" class="module-content">
+                    <h2 class="text-3xl font-bold text-slate-900 mb-2">Module 1: The VyOS Philosophy - From Tin to Code</h2>
+                    <p class="text-slate-600 mb-6">Understanding the shift from traditional hardware-centric networking to a modern, software-defined approach.</p>
+                    
+                    <div class="tabs" data-tab-group="1">
+                        <div class="border-b border-slate-200 mb-6">
+                            <nav class="flex space-x-4" aria-label="Tabs">
+                                <button class="tab-link py-3 px-1 border-b-2 font-medium text-sm text-slate-500 hover:text-slate-700 hover:border-slate-300" data-tab="tab-1-1">Objectives</button>
+                                <button class="tab-link py-3 px-1 border-b-2 font-medium text-sm text-slate-500 hover:text-slate-700 hover:border-slate-300" data-tab="tab-1-2">Conceptual Deep Dive</button>
+                                <button class="tab-link py-3 px-1 border-b-2 font-medium text-sm text-slate-500 hover:text-slate-700 hover:border-slate-300" data-tab="tab-1-3">Hands-On Lab</button>
+                                <button class="tab-link py-3 px-1 border-b-2 font-medium text-sm text-slate-500 hover:text-slate-700 hover:border-slate-300" data-tab="tab-1-4">Verification</button>
+                            </nav>
+                        </div>
+                        <div class="prose max-w-none">
+                            <div id="tab-1-1" class="tab-panel">
+                                <h3>Learning Objectives</h3>
+                                <p>Upon completion of this module, you will be able to:</p>
+                                <ul>
+                                    <li>Articulate the key differences between proprietary and open-source network operating systems.</li>
+                                    <li>Explain the benefits of a disaggregated model, such as hardware independence and version-controlled configurations.</li>
+                                    <li>Perform a basic installation of VyOS in a virtual environment.</li>
+                                    <li>Navigate the VyOS CLI hierarchy and understand the operational and configuration modes.</li>
+                                    <li>Execute the fundamental `set`/`delete`/`commit`/`save` workflow.</li>
+                                    <li>Demonstrate the ability to roll back to a previous configuration version.</li>
+                                </ul>
+                            </div>
+                            <div id="tab-1-2" class="tab-panel">
+                                <h3>Conceptual Deep Dive</h3>
+                                <p>Traditional networking, dominated by players like Cisco (IOS) and Juniper (Junos), follows a monolithic model. The hardware (the "tin") and the software (the OS) are tightly coupled and sold as a single unit. This creates vendor lock-in, long hardware refresh cycles, and a configuration paradigm centered around manual, per-device CLI commands.</p>
+                                <p>VyOS represents a fundamental shift to a disaggregated, open-source model. It's a network operating system built on a solid Debian Linux foundation, designed to run on commodity x86 hardware—be it a physical server, a white-box switch, or a virtual machine. This separation of hardware and software has profound implications:</p>
+                                <ul>
+                                    <li><strong>Hardware Independence:</strong> You choose the hardware that fits your performance and budget needs, from a low-power appliance to a multi-core server.</li>
+                                    <li><strong>Version Control (NetDevOps):</strong> The entire network configuration is a single, human-readable text file. This means you can treat it like code: store it in Git, review changes, and track its history. This is the foundation of Network DevOps (NetDevOps).</li>
+                                    <li><strong>API-Driven Automation:</strong> Modern systems are built to be managed programmatically. VyOS provides a robust HTTP API, allowing for deep integration with automation tools and custom scripts.</li>
+                                    <li><strong>Transparency:</strong> Being open-source, the entire codebase is available for inspection. There are no hidden backdoors or proprietary secrets.</li>
+                                </ul>
+                                <p>The VyOS configuration system itself is a key feature. It's a transactional system. When you use `set` or `delete` commands in configuration mode, you are staging changes. These changes are not applied to the running system until you `commit` them. This allows you to build a complex change, review it, and apply it atomically. If something goes wrong, you can easily `rollback` to a previous, known-good state. The `save` command writes the current running configuration to the boot configuration file, making it persistent across reboots.</p>
+                            </div>
+                            <div id="tab-1-3" class="tab-panel">
+                                <h3>Hands-On Virtual Lab</h3>
+                                <p>We'll install VyOS on a virtual machine (e.g., Proxmox, VirtualBox, VMware).</p>
+                                <ol>
+                                    <li><strong>Download VyOS:</strong> Get the latest "rolling" release ISO from the official VyOS website.</li>
+                                    <li><strong>Create a VM:</strong> Create a new VM with at least 1 vCPU, 512MB RAM, and a 4GB virtual disk. Attach the downloaded ISO. For this initial lab, one network interface is sufficient.</li>
+                                    <li><strong>Install VyOS:</strong> Boot the VM from the ISO. At the login prompt, use the user `vyos` with the password `vyos`.
+                                    <div class="code-block my-4">
+                                        <button class="copy-button">Copy</button>
+                                        <pre><code class="language-bash">install image</code></pre>
+                                    </div>
+                                    Follow the on-screen prompts to install VyOS to the virtual disk. Accept the defaults. After installation, reboot the VM and remove the ISO.</li>
+                                    <li><strong>Initial Configuration:</strong> Log in again (vyos/vyos). Enter configuration mode.
+                                    <div class="code-block my-4">
+                                        <button class="copy-button">Copy</button>
+                                        <pre><code class="language-bash">configure</code></pre>
+                                    </div>
+                                    Now, let's set some basic system parameters.
+                                    <div class="code-block my-4">
+                                        <button class="copy-button">Copy</button>
+                                        <pre><code class="language-bash">set system host-name 'vyos-lab-01'
+set system domain-name 'lab.local'
+set system time-zone 'UTC'
+set system login user vyos authentication plaintext-password 'your-new-password'
+</code></pre>
+                                    </div>
+                                    </li>
+                                    <li><strong>Commit and Save:</strong> Apply the changes and make them persistent.
+                                    <div class="code-block my-4">
+                                        <button class="copy-button">Copy</button>
+                                        <pre><code class="language-bash">commit
+save
+exit
+</code></pre>
+                                    </div>
+                                    </li>
+                                    <li><strong>Practice Rollback:</strong> Let's make another change, then discard it.
+                                    <div class="code-block my-4">
+                                        <button class="copy-button">Copy</button>
+                                        <pre><code class="language-bash">configure
+set system host-name 'vyos-temp-name'
+commit
+</code></pre>
+                                    </div>
+                                    Check the history. You'll see your previous commit (revision 1) and the new one (revision 2).
+                                     <div class="code-block my-4">
+                                        <button class="copy-button">Copy</button>
+                                        <pre><code class="language-bash">compare
+show system commit
+</code></pre>
+                                    </div>
+                                    Now, roll back to the previous version.
+                                     <div class="code-block my-4">
+                                        <button class="copy-button">Copy</button>
+                                        <pre><code class="language-bash">rollback 1
+commit
+save
+exit
+</code></pre>
+                                    </div>
+                                    The hostname will revert to 'vyos-lab-01'.
+                                    </li>
+                                </ol>
+                            </div>
+                            <div id="tab-1-4" class="tab-panel">
+                                <h3>Verification & Validation</h3>
+                                <p>After your initial configuration, you can verify the settings from operational mode (the default mode after logging in). The `show` command is your primary tool here.</p>
+                                <ul>
+                                    <li><strong>Check Hostname:</strong>
+                                    <div class="code-block my-4">
+                                        <button class="copy-button">Copy</button>
+                                        <pre><code class="language-bash">show system host-name</code></pre>
+                                    </div>
+                                    </li>
+                                    <li><strong>View the Entire Configuration:</strong>
+                                     <div class="code-block my-4">
+                                        <button class="copy-button">Copy</button>
+                                        <pre><code class="language-bash">show configuration</code></pre>
+                                    </div>
+                                    </li>
+                                     <li><strong>Check System Uptime and Version:</strong> The `run` command lets you execute underlying Linux commands.
+                                     <div class="code-block my-4">
+                                        <button class="copy-button">Copy</button>
+                                        <pre><code class="language-bash">show version
+run uptime
+</code></pre>
+                                    </div>
+                                    </li>
+                                    <li><strong>Verify Rollback:</strong> After performing the rollback lab, use `show system host-name` again to confirm the name has reverted. You can also use `show system commit` in configuration mode to see the commit history and confirm a new revision was created for the rollback action.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Module 2 -->
+                <section id="module-2" class="module-content">
+                    <h2 class="text-3xl font-bold text-slate-900 mb-2">Module 2: Gateway to the World - Core Services & Security</h2>
+                    <p class="text-slate-600 mb-6">Building a secure and functional internet gateway, the cornerstone of any network.</p>
+                     <div class="tabs" data-tab-group="2">
+                        <div class="border-b border-slate-200 mb-6">
+                            <nav class="flex space-x-4" aria-label="Tabs">
+                                <button class="tab-link py-3 px-1 border-b-2 font-medium text-sm text-slate-500 hover:text-slate-700 hover:border-slate-300" data-tab="tab-2-1">Objectives</button>
+                                <button class="tab-link py-3 px-1 border-b-2 font-medium text-sm text-slate-500 hover:text-slate-700 hover:border-slate-300" data-tab="tab-2-2">Conceptual Deep Dive</button>
+                                <button class="tab-link py-3 px-1 border-b-2 font-medium text-sm text-slate-500 hover:text-slate-700 hover:border-slate-300" data-tab="tab-2-3">Hands-On Lab</button>
+                                <button class="tab-link py-3 px-1 border-b-2 font-medium text-sm text-slate-500 hover:text-slate-700 hover:border-slate-300" data-tab="tab-2-4">Verification</button>
+                            </nav>
+                        </div>
+                        <div class="prose max-w-none">
+                           <div id="tab-2-1" class="tab-panel">
+                                <h3>Learning Objectives</h3>
+                                <ul>
+                                    <li>Understand the principles of a Zone-Based Firewall (ZBF) and its advantages over traditional Access Control Lists (ACLs).</li>
+                                    <li>Implement a stateful firewall policy to secure a network perimeter.</li>
+                                    <li>Configure core gateway services, including a DHCP server for LAN clients.</li>
+                                    <li>Implement Source NAT (Masquerade) to provide internet access to a private network.</li>
+                                    <li>Build a complete, functional "home router" equivalent using VyOS.</li>
+                                </ul>
+                            </div>
+                           <div id="tab-2-2" class="tab-panel">
+                                <h3>Conceptual Deep Dive</h3>
+                                <p>A modern network security posture is built on the principle of stateful inspection. Instead of stateless ACLs that inspect each packet in isolation, a stateful firewall tracks the state of network connections (e.g., TCP streams). This allows it to make more intelligent decisions, such as permitting return traffic for a connection that was initiated from inside the trusted network, without needing a specific rule for it.</p>
+                                <p>The <strong>Zone-Based Firewall (ZBF)</strong> is a powerful abstraction for implementing stateful security policy. Instead of attaching long ACLs to individual interfaces, we follow a simpler logic:</p>
+                                <ol>
+                                    <li><strong>Create Zones:</strong> A zone is a logical grouping of one or more interfaces that share the same security posture. Common examples are `LAN` (for trusted internal users) and `WAN` (for the untrusted internet).</li>
+                                    <li><strong>Assign Interfaces to Zones:</strong> Each interface that you want to be firewalled must belong to a zone.</li>
+                                    <li><strong>Define Policies Between Zones:</strong> The core of the ZBF is the "zone-policy". You define the default action (e.g., `drop` or `reject`) for traffic moving from a source zone to a destination zone (e.g., from `WAN` to `LAN`). Then, you create specific rulesets to allow desired traffic.</li>
+                                </ol>
+                                <p>This approach is highly scalable and intuitive. If you add a new trusted interface, you simply add it to the `LAN` zone, and it instantly inherits the entire security policy without any rule changes.</p>
+                                <p>Alongside security, a gateway router must provide two essential services:</p>
+                                <ul>
+                                    <li><strong>DHCP Server:</strong> To automatically assign IP addresses, subnet masks, default gateways, and DNS servers to client devices on the LAN.</li>
+                                    <li><strong>Network Address Translation (NAT):</strong> Specifically, Source NAT (also known as Masquerade). This process rewrites the source IP address of packets from the private LAN (e.g., 192.168.1.x) to the public IP address of the router's WAN interface. This is what allows multiple internal devices to share a single public IP address to access the internet.</li>
+                                </ul>
+                            </div>
+                           <div id="tab-2-3" class="tab-panel">
+                                <h3>Hands-On Virtual Lab</h3>
+                                <p>Configure your VyOS VM with two network interfaces. One (eth0) will be the LAN, and the other (eth1) will be the WAN. In your hypervisor, connect the WAN interface to a network that has internet access (like your home network bridge). Connect the LAN interface to an isolated virtual network where you will place a client test VM (e.g., a simple Debian or Ubuntu desktop).</p>
+                                <h4>Lab Topology</h4>
+                                <div class="flex items-center justify-center my-6">
+                                    <div class="diagram-box">Client VM</div>
+                                    <div class="diagram-arrow">➔</div>
+                                    <div class="diagram-box bg-green-100">eth0 (LAN)<br>192.168.100.1/24</div>
+                                    <div class="diagram-arrow">➔</div>
+                                    <div class="diagram-box bg-slate-200">VyOS Router</div>
+                                    <div class="diagram-arrow">➔</div>
+                                    <div class="diagram-box bg-red-100">eth1 (WAN)<br>DHCP Client</div>
+                                    <div class="diagram-arrow">➔</div>
+                                    <div class="diagram-box">Internet</div>
+                                </div>
+                                <p>Enter configuration mode (`configure`) and execute the following commands:</p>
+                                <ol>
+                                    <li><strong>Interface Configuration:</strong>
+                                    <div class="code-block my-4">
+                                        <button class="copy-button">Copy</button>
+                                        <pre><code class="language-bash">set interfaces ethernet eth0 address '192.168.100.1/24'
+set interfaces ethernet eth1 address 'dhcp'
+</code></pre>
+                                    </div></li>
+                                    <li><strong>DHCP Server for LAN:</strong>
+                                    <div class="code-block my-4">
+                                        <button class="copy-button">Copy</button>
+                                        <pre><code class="language-bash">set service dhcp-server shared-network-name LAN subnet 192.168.100.0/24 default-router '192.168.100.1'
+set service dhcp-server shared-network-name LAN subnet 192.168.100.0/24 dns-server '8.8.8.8'
+set service dhcp-server shared-network-name LAN subnet 192.168.100.0/24 range 0 start '192.168.100.100'
+set service dhcp-server shared-network-name LAN subnet 192.168.100.0/24 range 0 stop '192.168.100.200'
+</code></pre>
+                                    </div></li>
+                                    <li><strong>Source NAT (Masquerade):</strong>
+                                    <div class="code-block my-4">
+                                        <button class="copy-button">Copy</button>
+                                        <pre><code class="language-bash">set nat source rule 100 outbound-interface name 'eth1'
+set nat source rule 100 source address '192.168.100.0/24'
+set nat source rule 100 translation address 'masquerade'
+</code></pre>
+                                    </div></li>
+                                    <li><strong>Zone-Based Firewall:</strong>
+                                    <div class="code-block my-4">
+                                        <button class="copy-button">Copy</button>
+                                        <pre><code class="language-bash"># Create zones and assign interfaces
+set zone-policy zone WAN interface 'eth1'
+set zone-policy zone LAN interface 'eth0'
+
+# Define firewall rule sets
+set firewall name LAN-WAN-RULES default-action 'accept'
+set firewall name WAN-LAN-RULES default-action 'drop'
+set firewall name WAN-LAN-RULES rule 10 action 'accept'
+set firewall name WAN-LAN-RULES rule 10 state established 'enable'
+set firewall name WAN-LAN-RULES rule 10 state related 'enable'
+set firewall name WAN-LAN-RULES rule 20 action 'accept'
+set firewall name WAN-LAN-RULES rule 20 icmp type-name 'echo-request'
+set firewall name WAN-LAN-RULES rule 20 protocol 'icmp'
+set firewall name WAN-LAN-RULES rule 20 state new 'enable'
+
+# Apply policies between zones
+set zone-policy zone LAN from WAN firewall name 'WAN-LAN-RULES'
+set zone-policy zone WAN from LAN firewall name 'LAN-WAN-RULES'
+</code></pre>
+                                    </div></li>
+                                    <li><strong>Commit and Save:</strong>
+                                    <div class="code-block my-4">
+                                        <button class="copy-button">Copy</button>
+                                        <pre><code class="language-bash">commit
+save
+</code></pre>
+                                    </div></li>
+                                </ol>
+                           </div>
+                           <div id="tab-2-4" class="tab-panel">
+                                <h3>Verification & Validation</h3>
+                                <p>From the VyOS router:</p>
+                                <ul>
+                                    <li><strong>Check Interfaces:</strong> Verify eth1 got an IP from DHCP and eth0 has its static IP.
+                                    <div class="code-block my-4">
+                                        <button class="copy-button">Copy</button>
+                                        <pre><code class="language-bash">show interfaces</code></pre>
+                                    </div>
+                                    </li>
+                                    <li><strong>Check Firewall State:</strong> Ping a public address from the router itself, then check the connection tracking table.
+                                    <div class="code-block my-4">
+                                        <button class="copy-button">Copy</button>
+                                        <pre><code class="language-bash">ping 8.8.8.8
+show conntrack table
+</code></pre>
+                                    </div>
+                                    </li>
+                                </ul>
+                                <p>From your client test VM on the LAN:</p>
+                                <ol>
+                                    <li>Verify it received a DHCP lease in the 192.168.100.100-200 range.</li>
+                                    <li>Ping the VyOS router's LAN interface (`ping 192.168.100.1`).</li>
+                                    <li>Ping a public IP address (`ping 8.8.8.8`). This verifies DHCP, routing, NAT, and the firewall policy are all working together.</li>
+                                    <li>Try to ping the client VM from a machine outside the VyOS WAN. It should fail, proving the firewall is blocking unsolicited inbound connections.</li>
+                                </ol>
+                           </div>
+                        </div>
+                    </div>
+                </section>
+                
+                 <!-- Module 3 -->
+                <section id="module-3" class="module-content">
+                    <h2 class="text-3xl font-bold text-slate-900 mb-2">Module 3: The Multi-ISP Resilience Lab</h2>
+                    <p class="text-slate-600 mb-6">Building highly available internet connectivity through failover and load-balancing techniques.</p>
+                     <div class="tabs" data-tab-group="3">
+                        <div class="border-b border-slate-200 mb-6">
+                            <nav class="flex space-x-4" aria-label="Tabs">
+                                <button class="tab-link py-3 px-1 border-b-2 font-medium text-sm text-slate-500 hover:text-slate-700 hover:border-slate-300" data-tab="tab-3-1">Objectives</button>
+                                <button class="tab-link py-3 px-1 border-b-2 font-medium text-sm text-slate-500 hover:text-slate-700 hover:border-slate-300" data-tab="tab-3-2">Conceptual Deep Dive</button>
+                                <button class="tab-link py-3 px-1 border-b-2 font-medium text-sm text-slate-500 hover:text-slate-700 hover:border-slate-300" data-tab="tab-3-3">Hands-On Lab</button>
+                                <button class="tab-link py-3 px-1 border-b-2 font-medium text-sm text-slate-500 hover:text-slate-700 hover:border-slate-300" data-tab="tab-3-4">Verification</button>
+                            </nav>
+                        </div>
+                        <div class="prose max-w-none">
+                           <div id="tab-3-1" class="tab-panel">
+                                <h3>Learning Objectives</h3>
+                                <ul>
+                                   <li>Differentiate between network failover and load-balancing strategies for multi-homed environments.</li>
+                                   <li>Understand the core concepts of Policy-Based Routing (PBR).</li>
+                                   <li>Implement a primary/backup WAN configuration using route metrics and health checks.</li>
+                                   <li>Configure WAN load-balancing to distribute traffic across multiple ISP links.</li>
+                                   <li>Utilize multiple routing tables to direct traffic based on specific policies.</li>
+                                </ul>
+                            </div>
+                           <div id="tab-3-2" class="tab-panel">
+                                <h3>Conceptual Deep Dive</h3>
+                                <p>Standard routing is destination-based. The router looks at the destination IP of a packet and finds the longest matching prefix in its single, global routing table to decide where to send it. This works, but it's inflexible. What if you want to send traffic from one group of users out of ISP-1 and traffic from another group out of ISP-2? Or what if you want to use ISP-2 only when ISP-1 is down?</p>
+                                <p>This is where <strong>Policy-Based Routing (PBR)</strong> comes in. PBR allows us to use criteria other than the destination IP to make routing decisions. The most common criterion is the source IP address. PBR in VyOS is implemented through a powerful combination of multiple routing tables and rules:</p>
+                                <ol>
+                                    <li><strong>Multiple Routing Tables:</strong> In addition to the `main` routing table, you can create custom tables (e.g., `table 10` and `table 20`). Each table can have its own default gateway. For example, `table 10`'s default gateway could point to ISP-1, and `table 20`'s could point to ISP-2.</li>
+                                    <li><strong>Policy Rules:</strong> You create rules with a sequence number that tell the system: "If a packet matches this criteria (e.g., is from this source IP), then don't use the `main` routing table. Instead, do a lookup in `table X`."</li>
+                                </ol>
+                                <p>This system enables two key multi-ISP strategies:</p>
+                                <ul>
+                                    <li><strong>Failover:</strong> This is a primary/backup setup. You configure two default routes in the `main` routing table, but give the primary route a better (lower) `distance` metric (e.g., 1) and the backup route a worse (higher) metric (e.g., 10). The router will always prefer the lower metric route. A health-check script continuously pings a reliable target through the primary interface. If the pings fail, the script removes the primary route, and the router automatically begins using the backup route.</li>
+                                    <li><strong>Load-Balancing:</strong> This strategy actively uses both links. Using PBR, we create two routing tables, one for each ISP. We then create rules that match traffic from our LAN and direct it to one of the two tables. A common method is to use the `balance` rule, which distributes traffic across the links, often using a hash of source/destination IPs to ensure that all packets for a given session stick to the same link (session persistence).</li>
+                                </ul>
+                            </div>
+                           <div id="tab-3-3" class="tab-panel">
+                                <h3>Hands-On Virtual Lab</h3>
+                                <p>This is a more advanced lab. You'll need your main VyOS router VM with three interfaces: eth0 (LAN), eth1 (WAN1), eth2 (WAN2). You will also need two additional, very basic router VMs to act as your "ISPs". These can be other VyOS instances with just basic IP addressing.</p>
+                                <h4>Lab Topology</h4>
+                                <div class="flex items-center justify-center my-6">
+                                     <div class="diagram-box">Client VM</div>
+                                    <div class="diagram-arrow">➔</div>
+                                    <div class="diagram-box bg-green-100">eth0 (LAN)<br>192.168.100.1/24</div>
+                                    <div class="diagram-arrow">➔</div>
+                                    <div class="diagram-box bg-slate-200 w-48">Main VyOS Router</div>
+                                    <div class="diagram-arrow flex-col">
+                                        <span>➔</span>
+                                        <span>➔</span>
+                                    </div>
+                                    <div class="flex flex-col space-y-2">
+                                        <div class="diagram-box bg-red-100">eth1 (WAN1)<br>10.0.1.2/24</div>
+                                        <div class="diagram-box bg-red-100">eth2 (WAN2)<br>10.0.2.2/24</div>
+                                    </div>
+                                    <div class="diagram-arrow flex-col">
+                                        <span>➔</span>
+                                        <span>➔</span>
+                                    </div>
+                                     <div class="flex flex-col space-y-2">
+                                        <div class="diagram-box">ISP-1 Router<br>10.0.1.1/24</div>
+                                        <div class="diagram-box">ISP-2 Router<br>10.0.2.1/24</div>
+                                    </div>
+                                </div>
+                                <p>First, configure the basics on your main VyOS router (we'll remove previous NAT/firewall for simplicity).</p>
+                                <div class="code-block my-4">
+                                    <button class="copy-button">Copy</button>
+                                    <pre><code class="language-bash">set interfaces ethernet eth0 address '192.168.100.1/24'
+set interfaces ethernet eth1 address '10.0.1.2/24'
+set interfaces ethernet eth2 address '10.0.2.2/24'
+</code></pre>
+                                </div>
+                                <h4>Part 1: Failover Configuration</h4>
+                                <div class="code-block my-4">
+                                    <button class="copy-button">Copy</button>
+                                    <pre><code class="language-bash">set protocols static route 0.0.0.0/0 next-hop 10.0.1.1 distance '1'
+set protocols static route 0.0.0.0/0 next-hop 10.0.2.1 distance '10'
+
+set service nat source rule 100 outbound-interface name 'eth1'
+set service nat source rule 100 translation address 'masquerade'
+set service nat source rule 101 outbound-interface name 'eth2'
+set service nat source rule 101 translation address 'masquerade'
+</code></pre>
+                                </div>
+                                <h4>Part 2: Load-Balancing Configuration</h4>
+                                <p>First, remove the failover configuration: `delete protocols static route 0.0.0.0/0`</p>
+                                <div class="code-block my-4">
+                                    <button class="copy-button">Copy</button>
+                                    <pre><code class="language-bash"># Create routing tables
+set protocols static table 10 route 0.0.0.0/0 next-hop 10.0.1.1
+set protocols static table 20 route 0.0.0.0/0 next-hop 10.0.2.1
+
+# Create firewall modify rule for PBR
+set firewall modify PBR_BALANCE rule 10 action 'modify'
+set firewall modify PBR_BALANCE rule 10 modify table '10'
+set firewall modify PBR_BALANCE rule 20 action 'modify'
+set firewall modify PBR_BALANCE rule 20 modify table '20'
+
+# Create load-balance policy
+set policy route-map PBR_MAP rule 10 set table '10'
+set policy route-map PBR_MAP rule 20 set table '20'
+
+# Apply the policy to the LAN interface
+set interfaces ethernet eth0 policy route 'PBR_MAP'
+</code></pre>
+                                </div>
+                                 <p>Wait, the above is an older method. A more modern way uses `load-balance` groups. Let's do that instead. Remove the firewall and policy config above. </p>
+                                 <div class="code-block my-4">
+                                    <button class="copy-button">Copy</button>
+                                    <pre><code class="language-bash"># Configure load balancing
+set protocols static route 0.0.0.0/0 next-hop 10.0.1.1
+set protocols static route 0.0.0.0/0 next-hop 10.0.2.1
+
+set load-balancing wan rule 10 inbound-interface 'eth0'
+set load-balancing wan rule 10 interface eth1
+set load-balancing wan rule 10 interface eth2
+</code></pre>
+                                </div>
+                                <p>This simplified `load-balancing` config is often sufficient and easier to manage.</p>
+                            </div>
+                           <div id="tab-3-4" class="tab-panel">
+                                <h3>Verification & Validation</h3>
+                                <p>From your LAN client VM:</p>
+                                <ol>
+                                    <li><strong>For Failover:</strong> Use `traceroute 8.8.8.8`. The first hop should be 10.0.1.1 (ISP-1). Now, on your ISP-1 VM, disable the interface connected to your main router. Run the traceroute again. After a moment, the first hop should now be 10.0.2.1 (ISP-2).</li>
+                                    <li><strong>For Load-Balancing:</strong> This is trickier to see with traceroute as sessions are sticky. The best way is to watch the interface statistics on the VyOS router. Start a large download on the client.
+                                    <div class="code-block my-4">
+                                        <button class="copy-button">Copy</button>
+                                        <pre><code class="language-bash">monitor interfaces</code></pre>
+                                    </div>
+                                    You should see traffic flowing out of both `eth1` and `eth2`.
+                                    </li>
+                                    <li><strong>Check Routes:</strong> On the VyOS router, you can inspect the different routing tables.
+                                    <div class="code-block my-4">
+                                        <button class="copy-button">Copy</button>
+                                        <pre><code class="language-bash">show ip route # Shows main table
+show ip route table 10 # Shows custom table
+</code></pre>
+                                    </div>
+                                    </li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Module 4 -->
+                <section id="module-4" class="module-content">
+                    <h2 class="text-3xl font-bold text-slate-900 mb-2">Module 4: Connecting the Silos - VPNs</h2>
+                    <p class="text-slate-600 mb-6">Building secure tunnels over untrusted networks for site-to-site and remote user connectivity.</p>
+                </section>
+                
+                <!-- Module 5 -->
+                <section id="module-5" class="module-content">
+                    <h2 class="text-3xl font-bold text-slate-900 mb-2">Module 5: The Final Mile - Automation and API Integration</h2>
+                    <p class="text-slate-600 mb-6">Transitioning from a network engineer to a NetDevOps practitioner by managing infrastructure as code.</p>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const sidebarNav = document.getElementById('sidebar-nav');
+    const modules = document.querySelectorAll('.module-content');
+    const tabGroups = document.querySelectorAll('.tabs');
+    const copyButtons = document.querySelectorAll('.copy-button');
+
+    function setActiveModule(moduleId) {
+        modules.forEach(module => {
+            module.classList.toggle('active', module.id === moduleId);
+        });
+        sidebarNav.querySelectorAll('.sidebar-link').forEach(link => {
+            link.classList.toggle('active', link.dataset.module === moduleId);
+        });
+
+        // Activate the first tab of the new module
+        const activeModule = document.getElementById(moduleId);
+        if (activeModule) {
+            const firstTabLink = activeModule.querySelector('.tab-link');
+            if (firstTabLink) {
+                setActiveTab(firstTabLink.dataset.tab, firstTabLink.closest('.tabs').dataset.tabGroup);
+            }
+        }
+    }
+
+    function setActiveTab(tabId, tabGroup) {
+        const groupContainer = document.querySelector(`.tabs[data-tab-group='${tabGroup}']`);
+        if (groupContainer) {
+            groupContainer.querySelectorAll('.tab-panel').forEach(panel => {
+                panel.classList.toggle('active', panel.id === tabId);
+            });
+            groupContainer.querySelectorAll('.tab-link').forEach(link => {
+                link.classList.toggle('active', link.dataset.tab === tabId);
+            });
+        }
+    }
+    
+    sidebarNav.addEventListener('click', function(e) {
+        if (e.target.matches('.sidebar-link')) {
+            e.preventDefault();
+            const moduleId = e.target.dataset.module;
+            setActiveModule(moduleId);
+        }
+    });
+
+    tabGroups.forEach(group => {
+        group.addEventListener('click', function(e) {
+            if (e.target.matches('.tab-link')) {
+                e.preventDefault();
+                const tabId = e.target.dataset.tab;
+                const tabGroup = e.target.closest('.tabs').dataset.tabGroup;
+                setActiveTab(tabId, tabGroup);
+            }
+        });
+    });
+    
+    copyButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const codeBlock = button.nextElementSibling;
+            const code = codeBlock.innerText;
+            
+            const el = document.createElement('textarea');
+            el.value = code;
+            document.body.appendChild(el);
+            el.select();
+            try {
+                document.execCommand('copy');
+                button.innerText = 'Copied!';
+                setTimeout(() => {
+                    button.innerText = 'Copy';
+                }, 2000);
+            } catch (err) {
+                console.error('Failed to copy text: ', err);
+                button.innerText = 'Error';
+            }
+            document.body.removeChild(el);
+        });
+    });
+
+    // Set initial state
+    setActiveModule('module-1');
+});
+</script>
+
+</body>
+</html>
