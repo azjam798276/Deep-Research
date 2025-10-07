@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The 100x Engineer Curriculum</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0a0a0a;
+            color: #f0f0f0;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .neumorphic-switch.active span {
+            transform: translateX(1.75rem);
+            background-color: #3b82f6; /* blue-500 */
+        }
+        .neumorphic-switch.active {
+             box-shadow: inset 4px 4px 8px #060606, inset -4px -4px 8px #141414;
+        }
+        .gradient-text {
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s cubic-bezier(0, 1, 0, 1);
+        }
+        .accordion-content.open {
+            max-height: 1000px; /* Large enough to not clip content */
+            transition: max-height 1s ease-in-out;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Main Container -->
+    <div class="min-h-screen w-full p-4 md:p-8">
+        <main class="max-w-7xl mx-auto">
+            
+            <!-- Hero Section -->
+            <section class="text-center py-16 md:py-24">
+                <h1 class="text-4xl md:text-6xl lg:text-7xl font-black tracking-tighter mb-4">
+                    Architecting the <span class="gradient-text">Next Generation</span>.
+                </h1>
+                <p class="max-w-3xl mx-auto text-lg md:text-xl text-gray-400 mb-8">
+                    This is a home-based curriculum built on first principles, ruthless automation, and hands-on application. We don't just learn tools; we build systems. We start with the foundational protocols of modern computing.
+                </p>
+                <a href="https://github.com/azjam798276/Deep-Research/blob/main/Mastering_Network_Architecture_with_VyOS.html" target="_blank" rel="noopener noreferrer" class="inline-block bg-blue-600 text-white font-bold py-3 px-8 rounded-lg text-lg hover:bg-blue-500 transition-transform duration-300 transform hover:scale-105 shadow-lg shadow-blue-600/20">
+                    Begin with VyOS: Master the Network
+                </a>
+            </section>
+
+            <!-- Interactive Blueprints Section -->
+            <section class="py-16">
+                <h2 class="text-center text-3xl md:text-4xl font-bold tracking-tight mb-12">Interactive Design Blueprints</h2>
+                
+                <!-- Grid Container for 10 Iterations -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 md:gap-8">
+                    
+                    <!-- 1. Glassmorphism Card -->
+                    <div class="glass-card rounded-2xl p-6 flex flex-col justify-center items-center aspect-square h-full">
+                        <h3 class="font-bold text-lg mb-2">Glassmorphism</h3>
+                        <p class="text-center text-sm text-gray-300">A modern UI trend using background blur and transparency.</p>
+                    </div>
+
+                    <!-- 2. Interactive Button -->
+                    <div class="bg-gray-900 border border-gray-800 rounded-2xl p-6 flex flex-col justify-center items-center aspect-square h-full">
+                         <h3 class="font-bold text-lg mb-4">Kinetic Button</h3>
+                        <button class="bg-purple-600 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-300 transform hover:scale-110 hover:bg-purple-500 hover:shadow-2xl hover:shadow-purple-500/40">
+                            Hover Me
+                        </button>
+                    </div>
+
+                    <!-- 3. Dynamic Input Field -->
+                    <div class="bg-gray-900 border border-gray-800 rounded-2xl p-6 flex flex-col justify-center items-center aspect-square h-full">
+                        <h3 class="font-bold text-lg mb-4">Floating Label Input</h3>
+                        <div class="relative w-full">
+                            <input type="text" id="email" class="block w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-md text-white peer focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500" placeholder=" " />
+                            <label for="email" class="absolute text-sm text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-gray-800 px-2 peer-focus:px-2 peer-focus:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 left-1">
+                                Your Email
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- 4. Animated Stat Counter -->
+                    <div class="bg-gray-900 border border-gray-800 rounded-2xl p-6 flex flex-col justify-center items-center aspect-square h-full">
+                         <h3 class="font-bold text-lg mb-2">Stat Counter</h3>
+                         <p class="text-sm text-gray-400 mb-4">(Animates on scroll)</p>
+                         <p class="text-5xl font-extrabold text-green-400 stat-counter" data-target="109">0</p>
+                         <p class="text-sm text-gray-400 mt-2">Successful Startups</p>
+                    </div>
+                    
+                    <!-- 5. Accordion/FAQ Item -->
+                    <div class="bg-gray-900 border border-gray-800 rounded-2xl p-6 flex flex-col justify-center aspect-square h-full">
+                        <h3 class="font-bold text-lg mb-4 text-center">Accordion</h3>
+                        <div class="w-full">
+                            <button class="accordion-toggle w-full flex justify-between items-center p-3 bg-gray-800 rounded-lg hover:bg-gray-700 focus:outline-none">
+                                <span class="font-semibold">What is VyOS?</span>
+                                <svg class="w-5 h-5 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </button>
+                            <div class="accordion-content mt-2 text-sm text-gray-300 px-3">
+                                <p>VyOS is an open-source network operating system based on Debian GNU/Linux, providing a powerful, software-defined alternative to proprietary hardware routers.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 6. Neumorphic Toggle Switch -->
+                    <div class="bg-gray-900 border border-gray-800 rounded-2xl p-6 flex flex-col justify-center items-center aspect-square h-full">
+                         <h3 class="font-bold text-lg mb-4">Neumorphic Toggle</h3>
+                        <div class="neumorphic-switch w-20 h-10 bg-gray-900 rounded-full cursor-pointer p-2 flex items-center shadow-inner" style="box-shadow: inset 4px 4px 8px #060606, inset -4px -4px 8px #141414;">
+                            <span class="w-6 h-6 bg-gray-700 rounded-full shadow-md transition-transform duration-300 ease-in-out"></span>
+                        </div>
+                    </div>
+
+                    <!-- 7. Parallax Effect -->
+                    <div class="bg-gray-900 border border-gray-800 rounded-2xl p-6 flex flex-col justify-center items-center aspect-square h-full overflow-hidden relative">
+                        <div class="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-500 ease-out" style="background-image: url('https://placehold.co/600x400/0a0a0a/f0f0f0?text=BG');" data-parallax></div>
+                        <h3 class="font-bold text-2xl z-10 relative text-white drop-shadow-lg">Parallax</h3>
+                    </div>
+
+
+                    <!-- 8. Gradient Text -->
+                    <div class="bg-gray-900 border border-gray-800 rounded-2xl p-6 flex flex-col justify-center items-center aspect-square h-full">
+                         <h3 class="font-bold text-lg mb-2">Gradient Text</h3>
+                         <p class="gradient-text text-5xl font-black">Flow</p>
+                    </div>
+
+                    <!-- 9. Bento Grid Layout -->
+                    <div class="bg-gray-900 border border-gray-800 rounded-2xl p-4 flex flex-col justify-center items-center aspect-square h-full">
+                        <h3 class="font-bold text-lg mb-3 text-center">Bento Grid</h3>
+                        <div class="grid grid-cols-3 grid-rows-3 gap-2 w-full h-full">
+                            <div class="col-span-2 row-span-2 bg-blue-500/20 rounded-md"></div>
+                            <div class="col-span-1 row-span-1 bg-purple-500/20 rounded-md"></div>
+                            <div class="col-span-1 row-span-2 bg-green-500/20 rounded-md"></div>
+                            <div class="col-span-2 row-span-1 bg-red-500/20 rounded-md"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- 10. Interactive Pricing Card -->
+                    <div class="bg-gray-900 border border-gray-800 rounded-2xl p-6 flex flex-col justify-center items-center aspect-square h-full transition-all duration-300 hover:border-blue-500 hover:scale-105">
+                        <h3 class="font-bold text-lg">Core Module</h3>
+                        <p class="text-5xl font-black my-4">$0</p>
+                        <ul class="text-sm text-gray-400 space-y-1 mb-4 text-center">
+                            <li>✓ First Principles</li>
+                            <li>✓ Hands-on Labs</li>
+                            <li>✓ Automation Focus</li>
+                        </ul>
+                        <button class="w-full bg-gray-800 border border-gray-700 font-semibold py-2 px-4 rounded-lg hover:bg-blue-600 hover:border-blue-600 transition-colors">
+                            Enroll
+                        </button>
+                    </div>
+                    
+                </div>
+            </section>
+
+            <!-- Footer -->
+            <footer class="text-center py-12 mt-16 border-t border-gray-800">
+                <p class="text-gray-500">The 100x Engineer Initiative. Building the future, one commit at a time.</p>
+            </footer>
+
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // 4. Animated Stat Counter
+            const counters = document.querySelectorAll('.stat-counter');
+            const observerOptions = {
+                root: null,
+                threshold: 0.5
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const counter = entry.target;
+                        const target = +counter.getAttribute('data-target');
+                        let current = 0;
+                        const increment = target / 100;
+
+                        const updateCounter = () => {
+                            if (current < target) {
+                                current += increment;
+                                counter.innerText = Math.ceil(current);
+                                requestAnimationFrame(updateCounter);
+                            } else {
+                                counter.innerText = target;
+                            }
+                        };
+                        
+                        updateCounter();
+                        observer.unobserve(counter); // Animate only once
+                    }
+                });
+            }, observerOptions);
+
+            counters.forEach(counter => {
+                observer.observe(counter);
+            });
+
+            // 5. Accordion
+            const accordionToggles = document.querySelectorAll('.accordion-toggle');
+            accordionToggles.forEach(toggle => {
+                toggle.addEventListener('click', () => {
+                    const content = toggle.nextElementSibling;
+                    const icon = toggle.querySelector('svg');
+                    
+                    content.classList.toggle('open');
+                    icon.classList.toggle('rotate-180');
+                });
+            });
+            
+            // 6. Neumorphic Toggle
+            const switches = document.querySelectorAll('.neumorphic-switch');
+            switches.forEach(s => {
+                s.addEventListener('click', () => {
+                    s.classList.toggle('active');
+                });
+            });
+
+            // 7. Parallax Effect
+            const parallaxEl = document.querySelector('[data-parallax]');
+            if (parallaxEl) {
+                const parentContainer = parallaxEl.parentElement;
+                parentContainer.addEventListener('mousemove', (e) => {
+                    const rect = parentContainer.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    
+                    const moveX = ((x / rect.width) - 0.5) * -20; // -10px to 10px
+                    const moveY = ((y / rect.height) - 0.5) * -20; // -10px to 10px
+                    
+                    parallaxEl.style.transform = `translate(${moveX}px, ${moveY}px) scale(1.1)`;
+                });
+                parentContainer.addEventListener('mouseleave', () => {
+                     parallaxEl.style.transform = 'translate(0, 0) scale(1.1)';
+                });
+            }
+
+        });
+    </script>
+
+</body>
+</html>
